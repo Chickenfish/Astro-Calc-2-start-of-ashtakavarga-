@@ -54,30 +54,51 @@ export const modifySvg = (svgString) => {
 };
 
 export const fetchSarvashtakavargaData = async (astroData) => {
-  const apiURL = `https://api.vedastro.org/Calculate/SarvashtakavargaChart/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}`;
+  const sarvashtakavargaUrl = `https://api.vedastro.org/Calculate/SarvashtakavargaChart/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}/`;
+  console.log("Calling Sarvashtakavarga API:", sarvashtakavargaUrl); // Log the URL
 
   try {
-    const response = await axios.get(apiURL);
-    if (response.data.Status === "Pass") {
-      return processSarvashtakavargaData(response.data.Payload.SarvashtakavargaChart);
-    } else {
-      // Handle API response failure
-      console.error("API call failed:", response.data);
-      return null;
-    }
+    const response = await axios.get(sarvashtakavargaUrl);
+    return response.data.Payload.SarvashtakavargaChart;
   } catch (error) {
     console.error("Error fetching Sarvashtakavarga data:", error);
     return null;
   }
 };
-const processSarvashtakavargaData = (data) => {
-  const processedData = Object.entries(data).map(([planet, values]) => {
-    return {
-      planet,
-      total: values.Total,
-      rows: values.Rows
-    };
-  });
 
-  return processedData;
+export const fetchDashaData = async (astroData) => {
+  // Encoding the parameters
+  const location = astroData.location;
+  const time = astroData.time;
+  const date = astroData.date;
+  const currentLocation = astroData.currentLocation;
+  const futureStartDate = "01/01/2024"; // Adjust if needed
+  const futureEndDate = "01/01/2026"; // Adjust if needed
+
+  // Construct the URL with encoded parameters
+  const dashaUrl = `https://api.vedastro.org/Calculate/DasaAtRange/Location/${location}/Time/${time}/${date}/+10:00/Location/${currentLocation}/Time/00:00/${futureStartDate}/+10:00/Location/${currentLocation}/Time/00:00/${futureEndDate}/+10:00/levels/2/`;
+
+  console.log("Calling Dasha API:", dashaUrl); // Log the URL
+
+  try {
+    const response = await axios.get(dashaUrl);
+    return response.data.Payload.DasaAtRange;
+  } catch (error) {
+    console.error("Error fetching Dasha data:", error);
+    return null;
+  }
+};
+
+export const fetchPanchangaData = async (astroData) => {
+  const panchangaUrl = `https://api.vedastro.org/Calculate/PanchangaTable/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}/+08:00`;
+
+  console.log("Calling Panchanga API:", panchangaUrl); // Log the URL
+
+  try {
+    const response = await axios.get(panchangaUrl);
+    return response.data.Payload.PanchangaTable;
+  } catch (error) {
+    console.error("Error fetching Panchanga data:", error);
+    return null;
+  }
 };

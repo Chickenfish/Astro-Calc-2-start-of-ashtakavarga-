@@ -66,11 +66,85 @@ body {
   height: auto; /* Keeps the aspect ratio intact */
 }
 
-.sarvashtakavarga-table-container {
-  /* Example styles */
-  max-width: 100%;
-  margin: 20px auto;
+.sarvatable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sarvatable,
+th,
+td {
+  border: 1px solid black;
+}
+
+th {
+  font-weight: bold;
+}
+
+.sarvatable .even-row {
+  background-color: #f2f2f2;
+}
+
+/* Dasha table styles */
+.dasha-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.dasha-table th {
+  background-color: #222222; /* Or any color of your choice for the header */
+  color: white;
   padding: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+}
+
+.dasha-table td {
+  padding: 8px;
+  text-align: center;
+}
+
+/* Alternating row colors for readability */
+.dasha-table tr:nth-child(even) {
+  background-color: #ececec;
+}
+.dasha-table tr:nth-child(odd) {
+  background-color: #ddd;
+}
+
+.sub-dasha-table td {
+  padding: 8px;
+  text-align: center;
+}
+.sub-dasha-table {
+  width: 300px;
+  border-collapse: collapse;
+}
+/* Styling for the Minor Lords header */
+.sub-dasha-table th {
+  background-color: #31708e; /* Different color for Minor Lords header */
+  color: white;
+}
+
+.panchanga-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.panchanga-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+}
+
+.panchanga-table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.panchanga-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.panchanga-table tr:nth-child(odd) {
+  background-color: #ddd;
 }

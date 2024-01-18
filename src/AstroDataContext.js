@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
+import PropTypes from "prop-types";
 
 const AstroDataContext = createContext();
 
@@ -9,6 +10,10 @@ export const AstroDataProvider = ({ children }) => {
 
   const updateAstroData = (newData) => {
     setAstroData(newData);
+  };
+
+  AstroDataProvider.propTypes = {
+    children: PropTypes.node.isRequired,
   };
 
   return (

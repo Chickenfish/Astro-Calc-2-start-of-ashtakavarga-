@@ -1,7 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAstroData } from "./AstroDataContext"; //This stores a global state for the form data
-import { calculateSouthIndianChart, modifySvg } from "./AstroApiService"; //This calls the kundli api and modifies it (todo keep backing vector)
+import PropTypes from "prop-types";
 import "./styles.css";
+
+import {
+  calculateSouthIndianChart,
+  modifySvg,
+  fetchSarvashtakavargaData,
+  fetchDashaData,
+} from "./AstroApiService";
+import { useAstroData } from "./AstroDataContext";
+import SarvashtakavargaTable from "./SarvashtakavargaTable";
+import DashaTable from "./DashaTable";
 
 const FormInput = ({
   labelText,
@@ -21,7 +30,7 @@ const FormInput = ({
       autocomplete.current = new window.google.maps.places.Autocomplete(
         inputRef.current,
         {
-          types: ["(cities)"],
+          types: ["(regions)"],
         },
       );
       autocomplete.current.addListener("place_changed", () => {
@@ -29,10 +38,15 @@ const FormInput = ({
         const city = place.address_components?.find((comp) =>
           comp.types.includes("locality"),
         )?.long_name;
+        const state = place.address_components?.find((comp) =>
+          comp.types.includes("sublocality"),
+        )?.long_name;
         const country = place.address_components?.find((comp) =>
           comp.types.includes("country"),
         )?.long_name;
-        const locationValue = city && country ? `${city}, ${country}` : "";
+
+        // Concatenate city, state, and country. Include state only if it's available
+        const locationValue = [city, state, country].filter(Boolean).join(",");
         setValue(locationValue);
         onChange(locationValue);
       });
@@ -42,9 +56,19 @@ const FormInput = ({
   const handleChange = (e) => {
     const inputValue = e.target.value;
     setValue(inputValue);
-    onChange(inputValue);
+    if (!isLocation) {
+      onChange(inputValue);
+    }
   };
-
+  FormInput.propTypes = {
+    labelText: PropTypes.string.isRequired,
+    placeholder: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    type: PropTypes.string,
+    min: PropTypes.string,
+    max: PropTypes.string,
+    isLocation: PropTypes.bool,
+  };
   return (
     <label>
       {labelText}:{" "}
@@ -70,6 +94,8 @@ export default function App() {
     email: "",
   });
   const [kundliSvg, setKundliSvg] = useState("");
+  const [sarvashtakavargaData, setSarvashtakavargaData] = useState(null);
+  const [dashaData, setDashaData] = useState(null);
 
   const { astroData, updateAstroData } = useAstroData(); // Use the global state updater
 
@@ -89,15 +115,40 @@ export default function App() {
     const modifiedSvg = modifySvg(kundliResponse); // Modify the SVG
     setKundliSvg(modifiedSvg); // Update the state with the modified SVG
     updateAstroData(formattedData); // Update the global state with formatted data
+    const data = await fetchSarvashtakavargaData(astroData);
+    setSarvashtakavargaData(data);
     console.log("Data submitted:", formattedData);
   };
 
   const handleDebugClick = () => {
     console.log("Current Global State:", astroData);
   };
+
   useEffect(() => {
-    console.log("Global State updated:", astroData);
-  }, [astroData]); // Logs every time astroData changes
+    // Define an async function inside the useEffect
+    const fetchData = async () => {
+      if (astroData && astroData.date && astroData.time && astroData.location) {
+        // Kundli API call
+        const kundliResponse = await calculateSouthIndianChart(astroData);
+        if (kundliResponse) {
+          const modifiedSvg = modifySvg(kundliResponse);
+          setKundliSvg(modifiedSvg);
+        }
+
+        // Dasha API call
+        const fetchedDashaData = await fetchDashaData(astroData);
+        setDashaData(fetchedDashaData);
+
+      
+        // Sarvashtakavarga API call
+        const sarvashtakavargaResponse =
+          await fetchSarvashtakavargaData(astroData);
+        setSarvashtakavargaData(sarvashtakavargaResponse);
+      }
+    };
+    fetchData();
+  }, [astroData]);
+  // Dependency array includes astroData
 
   return (
     <div className="App">
@@ -136,13 +187,21 @@ export default function App() {
         <button type="submit">Submit</button>
       </form>
       <button onClick={handleDebugClick}>Debug Global State</button>
+
       {kundliSvg && (
         <div
           className="kundli-svg-container"
-          key={Date.now()}
           dangerouslySetInnerHTML={{ __html: kundliSvg }}
         />
       )}
+      <div className="sarvashtakavargaData">
+        {sarvashtakavargaData && (
+          <SarvashtakavargaTable data={sarvashtakavargaData} />
+        )}
+      </div>
+      <div className="dasha-table-container">
+        {dashaData && <DashaTable dashaData={dashaData} />}
+      </div>
     </div>
   );
 }

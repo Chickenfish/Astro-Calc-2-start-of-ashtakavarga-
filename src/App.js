@@ -7,10 +7,12 @@ import {
   modifySvg,
   fetchSarvashtakavargaData,
   fetchDashaData,
+  fetchPanchangaData,
 } from "./AstroApiService";
 import { useAstroData } from "./AstroDataContext";
 import SarvashtakavargaTable from "./SarvashtakavargaTable";
 import DashaTable from "./DashaTable";
+import PanchangaTable from "./PanchangaTable"; // Import the PanchangaTable component
 
 const FormInput = ({
   labelText,
@@ -96,6 +98,7 @@ export default function App() {
   const [kundliSvg, setKundliSvg] = useState("");
   const [sarvashtakavargaData, setSarvashtakavargaData] = useState(null);
   const [dashaData, setDashaData] = useState(null);
+  const [panchangaData, setPanchangaData] = useState(null);
 
   const { astroData, updateAstroData } = useAstroData(); // Use the global state updater
 
@@ -117,6 +120,8 @@ export default function App() {
     updateAstroData(formattedData); // Update the global state with formatted data
     const data = await fetchSarvashtakavargaData(astroData);
     setSarvashtakavargaData(data);
+    const fetchedPanchangaData = await fetchPanchangaData(astroData);
+    setPanchangaData(fetchedPanchangaData);
     console.log("Data submitted:", formattedData);
   };
 
@@ -202,6 +207,12 @@ export default function App() {
       <div className="dasha-table-container">
         {dashaData && <DashaTable dashaData={dashaData} />}
       </div>
+      
+      {panchangaData && (
+        <div className="panchanga-table-container">
+          <PanchangaTable panchangaData={panchangaData} />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,57 +1,58 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const PanchangaTable = ({ panchangaData }) => {
-  // Helper function to render Tithi details
-  const renderTithiDetails = (tithiData) => {
-    const details = [
-      tithiData.Name,
-      tithiData.Paksha,
-      tithiData.Date,
-      tithiData.Day,
-      tithiData.Phase,
-    ];
-    return details.join(", ");
+const DashaTable = ({ dashaData }) => {
+  const formatDate = (dateTimeString) => {
+    const datePart = dateTimeString.match(/(\d{2}\/\d{2}\/\d{4})/); // Regular expression to extract date in DD/MM/YYYY format
+    return datePart ? datePart[0] : ''; // Returns the extracted date part
   };
 
-  const renderPanchangaRows = () => {
-    return Object.entries(panchangaData)
-      .map(([key, value]) => {
-        if (key === "Tithi") {
-          // Special rendering for Tithi
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{renderTithiDetails(value)}</td>
-            </tr>
-          );
-        } else if (!["Lunar Month", "DishaShool"].includes(key)) {
-          // Render other rows normally, skipping Lunar Month and DishaShool
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>
-                {typeof value === "object"
-                  ? `${value.Name}, ${value.Description}`
-                  : value}
-              </td>
-            </tr>
-          );
-        }
-        return null; // Return null for skipped entries
-      })
-      .filter(Boolean); // Filter out null entries
+  const renderSubDasas = (subDasas) => {
+    return (
+      <>
+        <tr>
+          <th>Minor Lords</th>
+          <th>Start</th>
+          <th>End</th>
+        </tr>
+        {Object.entries(subDasas).map(([key, value]) => (
+          <tr key={key}>
+            <td>{value.Lord}</td>
+            <td>{formatDate(value.Start)}</td>
+            <td>{formatDate(value.End)}</td>
+          </tr>
+        ))}
+      </>
+    );
   };
+
+  const tableRows = Object.entries(dashaData).map(([majorLord, details]) => (
+    <React.Fragment key={majorLord}>
+      <tr>
+        <td>{details.Lord}</td>
+        <td>{formatDate(details.Start)}</td>
+        <td>{formatDate(details.End)}</td>
+      </tr>
+      {details.SubDasas ? renderSubDasas(details.SubDasas) : null}
+    </React.Fragment>
+  ));
 
   return (
-    <table className="panchanga-table">
-      <tbody>{renderPanchangaRows()}</tbody>
+    <table className="dasha-table">
+      <thead>
+        <tr>
+          <th>Major Lord</th>
+          <th>Start</th>
+          <th>End</th>
+        </tr>
+      </thead>
+      <tbody>{tableRows}</tbody>
     </table>
   );
 };
 
-PanchangaTable.propTypes = {
-  panchangaData: PropTypes.object.isRequired,
+DashaTable.propTypes = {
+  dashaData: PropTypes.object.isRequired,
 };
 
-export default PanchangaTable;
+export default DashaTable;

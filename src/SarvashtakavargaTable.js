@@ -15,13 +15,14 @@ const SarvashtakavargaTable = ({ data }) => {
     "Capricorn",
     "Aquarius",
     "Pisces",
-    "Total",
+    // Removed "Total" from the zodiac order
   ];
-  SarvashtakavargaTable.propTypes = {
-    data: PropTypes.object.isRequired, // Adjust according to the actual expected type
-  };
+
+  // Filter out the "Ascendant" and "Sarvashtakavarga" rows from the data
+  const filteredData = Object.entries(data).filter(([planet]) => planet !== "Ascendant" && planet !== "Sarvashtakavarga");
+
   return (
-    <table className="sarvatable">
+    <table className="base-table">
       <thead>
         <tr>
           <th>Planet</th>
@@ -31,18 +32,22 @@ const SarvashtakavargaTable = ({ data }) => {
         </tr>
       </thead>
       <tbody>
-        {Object.entries(data).map(([planet, values], index) => (
+        {filteredData.map(([planet, values], index) => (
           <tr key={planet} className={index % 2 === 0 ? "even-row" : ""}>
             <td>{planet}</td>
             {values.Rows.map((value, idx) => (
               <td key={idx}>{value}</td>
             ))}
-            <td>{values.Total}</td>
+            {/* Removed the cell for Total */}
           </tr>
         ))}
       </tbody>
     </table>
   );
+};
+
+SarvashtakavargaTable.propTypes = {
+  data: PropTypes.object.isRequired,
 };
 
 export default SarvashtakavargaTable;

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const DashaTable = ({ dashaData }) => {
   const formatDate = (dateTimeString) => {
     const datePart = dateTimeString.match(/(\d{2}\/\d{2}\/\d{4})/); // Regular expression to extract date in DD/MM/YYYY format
-    return datePart ? datePart[0] : ''; // Returns the extracted date part
+    return datePart ? datePart[0] : ""; // Returns the extracted date part
   };
 
   const renderSubDasas = (subDasas) => {
@@ -38,7 +38,7 @@ const DashaTable = ({ dashaData }) => {
   ));
 
   return (
-    <table className="dasha-table">
+    <table className="base-table">
       <thead>
         <tr>
           <th>Major Lord</th>

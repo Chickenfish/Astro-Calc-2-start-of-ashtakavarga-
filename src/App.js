@@ -8,11 +8,13 @@ import {
   fetchSarvashtakavargaData,
   fetchDashaData,
   fetchPanchangaData,
+  fetchAllPlanetData,
 } from "./AstroApiService";
 import { useAstroData } from "./AstroDataContext";
 import SarvashtakavargaTable from "./SarvashtakavargaTable";
 import DashaTable from "./DashaTable";
 import PanchangaTable from "./PanchangaTable"; // Import the PanchangaTable component
+import PlanetDataTable from "./PlanetDataTable";
 
 const FormInput = ({
   labelText,
@@ -99,6 +101,7 @@ export default function App() {
   const [sarvashtakavargaData, setSarvashtakavargaData] = useState(null);
   const [dashaData, setDashaData] = useState(null);
   const [panchangaData, setPanchangaData] = useState(null);
+  const [planetData, setPlanetData] = useState([]);
 
   const { astroData, updateAstroData } = useAstroData(); // Use the global state updater
 
@@ -114,14 +117,21 @@ export default function App() {
       location: formData.location.replace(/, /g, ","), // Remove space after comma
       currentLocation: formData.currentLocation.replace(/, /g, ","), // Remove space after comma
     };
+    updateAstroData(formattedData); // Update the global state with formatted data
+
     const kundliResponse = await calculateSouthIndianChart(astroData);
     const modifiedSvg = modifySvg(kundliResponse); // Modify the SVG
     setKundliSvg(modifiedSvg); // Update the state with the modified SVG
-    updateAstroData(formattedData); // Update the global state with formatted data
+
     const data = await fetchSarvashtakavargaData(astroData);
     setSarvashtakavargaData(data);
+
     const fetchedPanchangaData = await fetchPanchangaData(astroData);
     setPanchangaData(fetchedPanchangaData);
+
+    const fetchedPlanetData = await fetchAllPlanetData(astroData);
+    setPlanetData(fetchedPlanetData || []);
+
     console.log("Data submitted:", formattedData);
   };
 
@@ -130,7 +140,6 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Define an async function inside the useEffect
     const fetchData = async () => {
       if (astroData && astroData.date && astroData.time && astroData.location) {
         // Kundli API call
@@ -144,15 +153,24 @@ export default function App() {
         const fetchedDashaData = await fetchDashaData(astroData);
         setDashaData(fetchedDashaData);
 
-      
         // Sarvashtakavarga API call
         const sarvashtakavargaResponse =
           await fetchSarvashtakavargaData(astroData);
         setSarvashtakavargaData(sarvashtakavargaResponse);
+
+        // Panchanga API call
+        const fetchedPanchangaData = await fetchPanchangaData(astroData);
+        setPanchangaData(fetchedPanchangaData);
+
+        // Planet Data API call
+        const fetchedPlanetData = await fetchAllPlanetData(astroData);
+        setPlanetData(fetchedPlanetData);
       }
     };
+
     fetchData();
-  }, [astroData]);
+  }, [astroData]); // Dependency array includes astroData
+
   // Dependency array includes astroData
 
   return (
@@ -207,12 +225,15 @@ export default function App() {
       <div className="dasha-table-container">
         {dashaData && <DashaTable dashaData={dashaData} />}
       </div>
-      
+
       {panchangaData && (
         <div className="panchanga-table-container">
           <PanchangaTable panchangaData={panchangaData} />
         </div>
       )}
+      <div className="planet-data-table-container">
+        {planetData.length > 0 && <PlanetDataTable planetData={planetData} />}
+      </div>
     </div>
   );
 }

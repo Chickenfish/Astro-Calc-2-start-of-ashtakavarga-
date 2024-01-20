@@ -14,38 +14,42 @@ const PanchangaTable = ({ panchangaData }) => {
     return details.join(", ");
   };
 
-  const renderPanchangaRows = () => {
-    return Object.entries(panchangaData)
-      .map(([key, value]) => {
-        if (key === "Tithi") {
-          // Special rendering for Tithi
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{renderTithiDetails(value)}</td>
-            </tr>
-          );
-        } else if (!["Lunar Month", "DishaShool"].includes(key)) {
-          // Render other rows normally, skipping Lunar Month and DishaShool
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>
-                {typeof value === "object"
-                  ? `${value.Name}, ${value.Description}`
-                  : value}
-              </td>
-            </tr>
-          );
-        }
-        return null; // Return null for skipped entries
-      })
-      .filter(Boolean); // Filter out null entries
+  const renderPanchangaRow = (key, value) => {
+    if (key === "Tithi") {
+      return (
+        <tr key={key}>
+          <td>{key}</td>
+          <td>{renderTithiDetails(value)}</td>
+        </tr>
+      );
+    } else {
+      return (
+        <tr key={key}>
+          <td>{key}</td>
+          <td>
+            {typeof value === "object"
+              ? `${value.Name}, ${value.Description}`
+              : value}
+          </td>
+        </tr>
+      );
+    }
   };
 
+  // Define the order of the rows
+  const rowOrder = ["Tithi", "Vara", "Nakshatra", "Yoga", "Karana"];
+
   return (
-    <table className="panchanga-table">
-      <tbody>{renderPanchangaRows()}</tbody>
+    <table className="base-table">
+      <tbody>
+        {rowOrder.map((key) => {
+          const value = panchangaData[key];
+          if (value) {
+            return renderPanchangaRow(key, value);
+          }
+          return null;
+        })}
+      </tbody>
     </table>
   );
 };

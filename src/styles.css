@@ -148,3 +148,30 @@ th {
 .panchanga-table tr:nth-child(odd) {
   background-color: #ddd;
 }
+
+/* Base table style */
+.base-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.base-table th,
+.base-table td {
+  padding: 8px;
+  text-align: left;
+  border: 2px solid #094064; /* Or any preferred styling */
+}
+
+.base-table th {
+  background-color: #0e6197; /* Example header color */
+  color: #e9f6ff;
+}
+
+.base-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.base-table tr:nth-child(odd) {
+  background-color: #ddd;
+}

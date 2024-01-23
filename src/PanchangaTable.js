@@ -41,6 +41,11 @@ const PanchangaTable = ({ panchangaData }) => {
 
   return (
     <table className="base-table">
+      <thead>
+        <tr>
+          <th colSpan="2">Panchanga</th>
+        </tr>
+      </thead>
       <tbody>
         {rowOrder.map((key) => {
           const value = panchangaData[key];

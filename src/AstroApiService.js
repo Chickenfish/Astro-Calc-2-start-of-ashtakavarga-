@@ -77,12 +77,12 @@ export const modifySvg = (svgString) => {
 };
 
 export const fetchSarvashtakavargaData = async (astroData) => {
-  const sarvashtakavargaUrl = `https://api.vedastro.org/Calculate/SarvashtakavargaChart/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}/`;
+  const sarvashtakavargaUrl = `https://api.vedastro.org/Calculate/BhinnashtakavargaChart/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}/`;
   console.log("Calling Sarvashtakavarga API:", sarvashtakavargaUrl); // Log the URL
 
   try {
     const response = await axios.get(sarvashtakavargaUrl);
-    return response.data.Payload.SarvashtakavargaChart;
+    return response.data.Payload.BhinnashtakavargaChart;
   } catch (error) {
     console.error("Error fetching Sarvashtakavarga data:", error);
     return null;
@@ -128,7 +128,7 @@ export const fetchPanchangaData = async (astroData) => {
 
 export const fetchAllPlanetData = async (astroData) => {
   const planetDataUrl = `https://api.vedastro.org/Calculate/AllPlanetData/PlanetName/All/Location/${encodeURIComponent(astroData.location)}/Time/${encodeURIComponent(astroData.time)}/${encodeURIComponent(astroData.date)}/+10:00`;
-
+  console.log("Calling Planet Degree API:", planetDataUrl);
   try {
     const response = await axios.get(planetDataUrl);
     return response.data.Payload.AllPlanetData;

@@ -55,7 +55,13 @@ const FormInput = ({
         onChange(locationValue);
       });
     }
-  }, [onChange]);
+    return () => {
+      if (autocomplete.current) {
+        // Remove all listeners from the Autocomplete instance
+        window.google.maps.event.clearInstanceListeners(autocomplete.current);
+      }
+    };
+  }, [onChange, isLocation]);
 
   const handleChange = (e) => {
     const inputValue = e.target.value;
@@ -97,6 +103,7 @@ export default function App() {
     currentLocation: "",
     email: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [kundliSvg, setKundliSvg] = useState("");
   const [sarvashtakavargaData, setSarvashtakavargaData] = useState(null);
   const [dashaData, setDashaData] = useState(null);
@@ -117,7 +124,8 @@ export default function App() {
       location: formData.location.replace(/, /g, ","), // Remove space after comma
       currentLocation: formData.currentLocation.replace(/, /g, ","), // Remove space after comma
     };
-    updateAstroData(formattedData); // Update the global state with formatted data
+    updateAstroData(formattedData);
+    setIsLoading(true); // Update the global state with formatted data
 
     const kundliResponse = await calculateSouthIndianChart(astroData);
     const modifiedSvg = modifySvg(kundliResponse); // Modify the SVG
@@ -133,6 +141,10 @@ export default function App() {
     setPlanetData(fetchedPlanetData || []);
 
     console.log("Data submitted:", formattedData);
+
+    setTimeout(() => {
+      setIsLoading(false); // Hide loading overlay after 2 seconds
+    }, 2000);
   };
 
   const handleDebugClick = () => {
@@ -174,66 +186,94 @@ export default function App() {
   // Dependency array includes astroData
 
   return (
-    <div className="App">
-      <h1>Enter Birth Details:</h1>
-      <form onSubmit={handleSubmit}>
-        <FormInput
-          labelText="Date"
-          type="date"
-          min="1900-01-01"
-          max="2025-01-01"
-          onChange={handleInputChange("date")}
-        />
-        <FormInput
-          labelText="Time"
-          type="time"
-          onChange={handleInputChange("time")}
-        />
-        <FormInput
-          labelText="Location"
-          placeholder="City, Country"
-          onChange={handleInputChange("location")}
-          isLocation={true}
-        />
-        <FormInput
-          labelText="Current Location"
-          placeholder="City, Country"
-          onChange={handleInputChange("currentLocation")}
-          isLocation={true}
-        />
-        <FormInput
-          labelText="Email Address"
-          type="email"
-          placeholder="youremail@example.com"
-          onChange={handleInputChange("email")}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      <button onClick={handleDebugClick}>Debug Global State</button>
+    <>
+      <div className="App">
+        <h1>Enter Birth Details:</h1>
+        <form onSubmit={handleSubmit}>
+          <FormInput
+            labelText="Date"
+            type="date"
+            min="1900-01-01"
+            max="2025-01-01"
+            onChange={handleInputChange("date")}
+          />
+          <FormInput
+            labelText="Time"
+            type="time"
+            onChange={handleInputChange("time")}
+          />
+          <FormInput
+            labelText="Location"
+            placeholder="City, Country"
+            onChange={handleInputChange("location")}
+            isLocation={true}
+          />
+          <FormInput
+            labelText="Current Location"
+            placeholder="City, Country"
+            onChange={handleInputChange("currentLocation")}
+            isLocation={true}
+          />
+          <FormInput
+            labelText="Email Address"
+            type="email"
+            placeholder="youremail@example.com"
+            onChange={handleInputChange("email")}
+          />
+          <button type="submit">Submit</button>
+          <button onClick={handleDebugClick}>Debug Global State</button>
+        </form>
 
-      {kundliSvg && (
-        <div
-          className="kundli-svg-container"
-          dangerouslySetInnerHTML={{ __html: kundliSvg }}
-        />
-      )}
-      <div className="sarvashtakavargaData">
-        {sarvashtakavargaData && (
-          <SarvashtakavargaTable data={sarvashtakavargaData} />
+        {isLoading && (
+          <div className="loading-overlay">
+            <div>Loading...</div>
+            <img
+              src="https://cdn.dribbble.com/users/719101/screenshots/3087499/media/a65570383f509b6586373dab2c4168e0.gif"
+              alt="Loading"
+            />
+          </div>
         )}
       </div>
-      <div className="dasha-table-container">
-        {dashaData && <DashaTable dashaData={dashaData} />}
-      </div>
 
-      {panchangaData && (
-        <div className="panchanga-table-container">
-          <PanchangaTable panchangaData={panchangaData} />
+      <div className="main">
+        <h1 className="chart-heading">Vedic Astrology Chart</h1>
+        <div className="grid-container">
+          {/* Kundli chart */}
+          <div className="kundli-chart-container">
+            {kundliSvg && (
+              <div
+                className="kundli-svg-container"
+                dangerouslySetInnerHTML={{ __html: kundliSvg }}
+              />
+            )}
+          </div>{" "}
+          {/* This closing tag was missing */}
+          {/* Planet data table */}
+          <div className="planet-data-table-container">
+            {planetData.length > 0 && (
+              <PlanetDataTable planetData={planetData} />
+            )}
+          </div>{" "}
+          {/* This closing tag was missing */}
+          {/* Sarvashtakavarga table */}
+          <div className="sarvashtakavarga-table-container">
+            {sarvashtakavargaData && (
+              <SarvashtakavargaTable data={sarvashtakavargaData} />
+            )}
+          </div>{" "}
+          {/* This closing tag was missing */}
+          {/* Dasha table */}
+          <div className="dasha-table-container">
+            {dashaData && <DashaTable dashaData={dashaData} />}
+          </div>{" "}
+          {/* This closing tag was missing */}
+          {/* Panchanga table */}
+          <div className="panchanga-table-container">
+            {panchangaData && <PanchangaTable panchangaData={panchangaData} />}
+          </div>{" "}
+          {/* This closing tag was missing */}
         </div>
-      )}
-      <div className="planet-data-table-container">
-        {planetData.length > 0 && <PlanetDataTable planetData={planetData} />}
       </div>
-    </div>
+    </>
   );
 }

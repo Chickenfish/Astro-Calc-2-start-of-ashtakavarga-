@@ -1,37 +1,49 @@
 .App {
-  font-family: sans-serif;
-  text-align: center;
-  position: relative;
-}
-body,
-html {
-  margin: 0;
-  padding: 0;
+  width: 1240px; /* Set width to 1240px */
+  height: 1754px; /* Set height to 1754px */
+  margin: auto; /* Centers the App in the viewport */
+  position: relative; /* Needed for absolute positioning of child elements */
+  background-image: url("https://i.imgur.com/4mXCa9j.jpg"); /* Replace with your background image path */
+  background-size: cover; /* Ensure the background covers the entire div */
+  overflow: hidden; /* Hide anything that goes beyond the boundaries */
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; /* Optional, for styling */
+  border-radius: 4px; /* Optional, for styling */
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-#root {
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .App {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-width: 500px;
+  width: 1240px;
+  height: 1754px;
   margin: auto;
-  padding: 16px;
+  position: relative;
+  background-image: url("https://i.imgur.com/4mXCa9j.jpg");
+  background-size: cover;
+  overflow: hidden;
   box-shadow:
     rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
     rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   border-radius: 4px;
-  padding: 24px;
 }
+
+.form-container {
+  margin: auto;
+  position: absolute;
+  background-color: #fffcfb;
+  overflow: hidden;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  border-radius: 4px;
+  width: 600px;
+  height: 200px;
+  display: grid;
+  grid-template-columns: minmax(auto, 1fr) 7em;
+  grid-column-gap: 12px;
+  align-items: center;
+  text-justify: left;
+}
+
 .App input[type="text"] {
   appearance: none;
   border: none;
@@ -41,6 +53,7 @@ body {
   border-radius: 4px;
   line-height: normal;
 }
+
 .App input::placeholder {
   color: gray;
 }
@@ -52,6 +65,7 @@ body {
   align-items: center;
   text-justify: left;
 }
+
 .App h1 {
   text-align: center;
   margin-bottom: 16px;
@@ -65,85 +79,6 @@ body {
 .kundli-svg-container svg {
   max-width: 100%; /* Ensures SVG scales down if necessary */
   height: auto; /* Keeps the aspect ratio intact */
-}
-
-.sarvatable {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.sarvatable,
-th,
-td {
-  border: 1px solid black;
-}
-
-th {
-  font-weight: bold;
-}
-
-.sarvatable .even-row {
-  background-color: #f2f2f2;
-}
-
-/* Dasha table styles */
-.dasha-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.dasha-table th {
-  background-color: #222222; /* Or any color of your choice for the header */
-  color: white;
-  padding: 10px;
-}
-
-.dasha-table td {
-  padding: 8px;
-  text-align: center;
-}
-
-/* Alternating row colors for readability */
-.dasha-table tr:nth-child(even) {
-  background-color: #ececec;
-}
-.dasha-table tr:nth-child(odd) {
-  background-color: #ddd;
-}
-
-.sub-dasha-table td {
-  padding: 8px;
-  text-align: center;
-}
-.sub-dasha-table {
-  width: 300px;
-  border-collapse: collapse;
-}
-.sub-dasha-table th {
-  background-color: #31708e; /* Different color for Minor Lords header */
-  color: white;
-}
-
-.panchanga-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-.panchanga-table th {
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
-}
-.panchanga-table td {
-  padding: 8px;
-  text-align: left;
-}
-.panchanga-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-.panchanga-table tr:nth-child(odd) {
-  background-color: #ddd;
 }
 
 /* Base table style */

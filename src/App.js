@@ -187,40 +187,43 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Enter Birth Details:</h1>
-      <form onSubmit={handleSubmit}>
-        <FormInput
-          labelText="Date"
-          type="date"
-          min="1900-01-01"
-          max="2025-01-01"
-          onChange={handleInputChange("date")}
-        />
-        <FormInput
-          labelText="Time"
-          type="time"
-          onChange={handleInputChange("time")}
-        />
-        <FormInput
-          labelText="Location"
-          placeholder="City, Country"
-          onChange={handleInputChange("location")}
-          isLocation={true}
-        />
-        <FormInput
-          labelText="Current Location"
-          placeholder="City, Country"
-          onChange={handleInputChange("currentLocation")}
-          isLocation={true}
-        />
-        <FormInput
-          labelText="Email Address"
-          type="email"
-          placeholder="youremail@example.com"
-          onChange={handleInputChange("email")}
-        />
-        <button type="submit">Submit</button>
-      </form>
+      <div className="form-container">
+        <h1>Enter Birth Details:</h1>
+        <form onSubmit={handleSubmit}>
+          <FormInput
+            labelText="Date"
+            type="date"
+            min="1900-01-01"
+            max="2025-01-01"
+            onChange={handleInputChange("date")}
+          />
+          <FormInput
+            labelText="Time"
+            type="time"
+            onChange={handleInputChange("time")}
+          />
+          <FormInput
+            labelText="Location"
+            placeholder="City, Country"
+            onChange={handleInputChange("location")}
+            isLocation={true}
+          />
+          <FormInput
+            labelText="Current Location"
+            placeholder="City, Country"
+            onChange={handleInputChange("currentLocation")}
+            isLocation={true}
+          />
+          <FormInput
+            labelText="Email Address"
+            type="email"
+            placeholder="youremail@example.com"
+            onChange={handleInputChange("email")}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+
       <button onClick={handleDebugClick}>Debug Global State</button>
       {isLoading && (
         <div className="loading-overlay">

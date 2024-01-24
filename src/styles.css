@@ -2,12 +2,6 @@
   font-family: sans-serif;
   text-align: center;
   position: relative;
-  background-image: url("https://i.ibb.co/0VQxqxQ/sadhuastro-pdf-template.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
-  position: relative;
-  height: 100vh;
 }
 body,
 html {
@@ -184,7 +178,7 @@ th {
   background: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
   padding-top: 33.333%;
   z-index: 10;

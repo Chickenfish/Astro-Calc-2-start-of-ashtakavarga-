@@ -109,6 +109,10 @@ export default function App() {
   const [dashaData, setDashaData] = useState(null);
   const [panchangaData, setPanchangaData] = useState(null);
   const [planetData, setPlanetData] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const dragItem = useRef();
+  const dragItemOffset = useRef({ x: 0, y: 0 });
 
   const { astroData, updateAstroData } = useAstroData(); // Use the global state updater
 
@@ -147,6 +151,29 @@ export default function App() {
     }, 2000);
   };
 
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    dragItem.current = e.target.parentElement;
+    dragItemOffset.current = {
+      x: e.clientX - dragItem.current.getBoundingClientRect().left,
+      y: e.clientY - dragItem.current.getBoundingClientRect().top,
+    };
+  };
+
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      const x = e.clientX - dragItemOffset.current.x;
+      const y = e.clientY - dragItemOffset.current.y;
+      setPosition({ x, y });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    dragItem.current = null;
+  };
+
+
   const handleDebugClick = () => {
     console.log("Current Global State:", astroData);
   };
@@ -179,49 +206,83 @@ export default function App() {
         setPlanetData(fetchedPlanetData);
       }
     };
-
+    
     fetchData();
-  }, [astroData]); // Dependency array includes astroData
+  }, [astroData]);
+  
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        const x = e.clientX - dragItemOffset.current.x;
+        const y = e.clientY - dragItemOffset.current.y;
+        setPosition({ x, y });
+      }
+    };
 
-  // Dependency array includes astroData
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      dragItem.current = null;
+    };
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    }
+
+    // Clean up event listeners
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
 
   return (
     <div className="App">
-      <div className="form-container">
+     <div 
+        className="form-container" 
+        onMouseDown={handleMouseDown}
+        style={{
+          cursor: isDragging ? 'grabbing' : 'grab',
+          transform: `translate(${position.x}px, ${position.y}px)`,
+          position: 'absolute', // This might need to be adjusted based on your layout
+        }}
+      >
         <h1>Enter Birth Details:</h1>
-        <form onSubmit={handleSubmit}>
-          <FormInput
-            labelText="Date"
-            type="date"
-            min="1900-01-01"
-            max="2025-01-01"
-            onChange={handleInputChange("date")}
-          />
-          <FormInput
-            labelText="Time"
-            type="time"
-            onChange={handleInputChange("time")}
-          />
-          <FormInput
-            labelText="Location"
-            placeholder="City, Country"
-            onChange={handleInputChange("location")}
-            isLocation={true}
-          />
-          <FormInput
-            labelText="Current Location"
-            placeholder="City, Country"
-            onChange={handleInputChange("currentLocation")}
-            isLocation={true}
-          />
-          <FormInput
-            labelText="Email Address"
-            type="email"
-            placeholder="youremail@example.com"
-            onChange={handleInputChange("email")}
-          />
-          <button type="submit">Submit</button>
-        </form>
+        <div className="input-group">
+          <form onSubmit={handleSubmit}>
+            <FormInput
+              labelText="Date"
+              type="date"
+              min="1900-01-01"
+              max="2025-01-01"
+              onChange={handleInputChange("date")}
+            />
+            <FormInput
+              labelText="Time"
+              type="time"
+              onChange={handleInputChange("time")}
+            />
+            <FormInput
+              labelText="Location"
+              placeholder="City, Country"
+              onChange={handleInputChange("location")}
+              isLocation={true}
+            />
+            <FormInput
+              labelText="Current Location"
+              placeholder="City, Country"
+              onChange={handleInputChange("currentLocation")}
+              isLocation={true}
+            />
+            <FormInput
+              labelText="Email Address"
+              type="email"
+              placeholder="youremail@example.com"
+              onChange={handleInputChange("email")}
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
       </div>
 
       <button onClick={handleDebugClick}>Debug Global State</button>

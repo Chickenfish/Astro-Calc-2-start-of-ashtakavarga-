@@ -1,18 +1,4 @@
 .App {
-  width: 1240px; /* Set width to 1240px */
-  height: 1754px; /* Set height to 1754px */
-  margin: auto; /* Centers the App in the viewport */
-  position: relative; /* Needed for absolute positioning of child elements */
-  background-image: url("https://i.imgur.com/4mXCa9j.jpg"); /* Replace with your background image path */
-  background-size: cover; /* Ensure the background covers the entire div */
-  overflow: hidden; /* Hide anything that goes beyond the boundaries */
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
-    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; /* Optional, for styling */
-  border-radius: 4px; /* Optional, for styling */
-}
-
-.App {
   width: 1240px;
   height: 1754px;
   margin: auto;
@@ -27,43 +13,72 @@
 }
 
 .form-container {
-  margin: auto;
-  position: absolute;
-  background-color: #fffcfb;
-  overflow: hidden;
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
-    rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+  max-width: 280px; /* Increased width for more room */
+  margin: 0 auto; /* Center the form container */
+  padding: 24px;
+  padding-left: 10px;
+padding-right: 26px;
+  background: #fff;
   border-radius: 4px;
-  width: 600px;
-  height: 200px;
-  display: grid;
-  grid-template-columns: minmax(auto, 1fr) 7em;
-  grid-column-gap: 12px;
-  align-items: center;
-  text-justify: left;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+padding-top: 1px;
+padding-bottom: 10px;
+cursor: grab;
+}
+.form-container:active {
+  cursor: grabbing; /* Cursor style while dragging */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.form-container h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 16px;
 }
 
-.App input[type="text"] {
-  appearance: none;
+.form-container .input-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-container .input-group label {
+  flex-shrink: 0; /* Prevent the label from shrinking */
+  margin-right: 10px; /* Provide some space between the label and the input */
+}
+
+.form-container .input-group input {
+  flex-grow: 1; /* Allow the input to grow and fill the space */
+  margin-left: 10px; /* Provide some space between the label and the input */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Ensure that date and time inputs take the full available space */
+.form-container input[type="date"],
+.form-container input[type="time"],
+.form-container input[type="email"],
+.form-container input[type="text"],
+.form-container input[type="number"]{
+  width: calc(100% - 20px)
+}
+
+/* Style the submit button */
+.form-container button[type="submit"] {
+  width: calc(100% - 20px); /* Adjust based on actual padding and margins */
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
   border: none;
-  background-color: #f9f9f9;
-  padding: 8px;
-  padding-left: 12px;
-  border-radius: 4px;
-  line-height: normal;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 16px;
+  margin-left: 19px;
 }
 
-.App input::placeholder {
-  color: gray;
-}
-
-.App label {
-  display: grid;
-  grid-template-columns: minmax(auto, 1fr) 7em;
-  grid-column-gap: 12px;
-  align-items: center;
-  text-justify: left;
+.form-container button[type="submit"]:hover {
+  background-color: #444;
 }
 
 .App h1 {

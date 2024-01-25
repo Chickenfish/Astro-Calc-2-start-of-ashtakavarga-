@@ -17,17 +17,12 @@
   margin: 0 auto; /* Center the form container */
   padding: 24px;
   padding-left: 10px;
-padding-right: 26px;
+  padding-right: 26px;
   background: #fff;
   border-radius: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-padding-top: 1px;
-padding-bottom: 10px;
-cursor: grab;
-}
-.form-container:active {
-  cursor: grabbing; /* Cursor style while dragging */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  padding-top: 1px;
+  padding-bottom: 10px;
 }
 .form-container h1 {
   font-size: 24px;
@@ -60,8 +55,8 @@ cursor: grab;
 .form-container input[type="time"],
 .form-container input[type="email"],
 .form-container input[type="text"],
-.form-container input[type="number"]{
-  width: calc(100% - 20px)
+.form-container input[type="number"] {
+  width: calc(100% - 20px);
 }
 
 /* Style the submit button */

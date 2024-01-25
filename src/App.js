@@ -109,10 +109,6 @@ export default function App() {
   const [dashaData, setDashaData] = useState(null);
   const [panchangaData, setPanchangaData] = useState(null);
   const [planetData, setPlanetData] = useState([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const dragItem = useRef();
-  const dragItemOffset = useRef({ x: 0, y: 0 });
 
   const { astroData, updateAstroData } = useAstroData(); // Use the global state updater
 
@@ -151,29 +147,6 @@ export default function App() {
     }, 2000);
   };
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    dragItem.current = e.target.parentElement;
-    dragItemOffset.current = {
-      x: e.clientX - dragItem.current.getBoundingClientRect().left,
-      y: e.clientY - dragItem.current.getBoundingClientRect().top,
-    };
-  };
-
-  const handleMouseMove = (e) => {
-    if (isDragging) {
-      const x = e.clientX - dragItemOffset.current.x;
-      const y = e.clientY - dragItemOffset.current.y;
-      setPosition({ x, y });
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    dragItem.current = null;
-  };
-
-
   const handleDebugClick = () => {
     console.log("Current Global State:", astroData);
   };
@@ -206,47 +179,15 @@ export default function App() {
         setPlanetData(fetchedPlanetData);
       }
     };
-    
+
     fetchData();
-  }, [astroData]);
-  
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      if (isDragging) {
-        const x = e.clientX - dragItemOffset.current.x;
-        const y = e.clientY - dragItemOffset.current.y;
-        setPosition({ x, y });
-      }
-    };
+  }, [astroData]); // Dependency array includes astroData
 
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      dragItem.current = null;
-    };
-
-    if (isDragging) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
-
-    // Clean up event listeners
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging]);
+  // Dependency array includes astroData
 
   return (
     <div className="App">
-     <div 
-        className="form-container" 
-        onMouseDown={handleMouseDown}
-        style={{
-          cursor: isDragging ? 'grabbing' : 'grab',
-          transform: `translate(${position.x}px, ${position.y}px)`,
-          position: 'absolute', // This might need to be adjusted based on your layout
-        }}
-      >
+      <div className="form-container">
         <h1>Enter Birth Details:</h1>
         <div className="input-group">
           <form onSubmit={handleSubmit}>
@@ -293,9 +234,8 @@ export default function App() {
             src="https://cdn.dribbble.com/users/719101/screenshots/3087499/media/a65570383f509b6586373dab2c4168e0.gif"
             alt="Loading"
           />
-        </div>
+          </div>
       )}
-
       {kundliSvg && (
         <div
           className="kundli-svg-container"
@@ -310,7 +250,6 @@ export default function App() {
       <div className="dasha-table-container">
         {dashaData && <DashaTable dashaData={dashaData} />}
       </div>
-
       {panchangaData && (
         <div className="panchanga-table-container">
           <PanchangaTable panchangaData={panchangaData} />
